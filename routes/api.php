@@ -12,5 +12,6 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::group(['middleware' => 'auth:sanctum'], function() {
-    Route::get('categories',[CategoryController::class,'index']);
+
+    Route::resource('categories',CategoryController::class);
 });
