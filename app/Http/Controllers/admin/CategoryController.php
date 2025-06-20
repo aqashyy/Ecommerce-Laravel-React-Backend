@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
@@ -18,9 +19,11 @@ class CategoryController extends Controller
             'data'  =>  $categories
         ],200);
     }
+    /*  Function for store categories */
     public function store(Request $request) {
         $validator  =   Validator::make($request->all(), [
-            'name'  =>  'required'
+            'name'      =>  'required',
+            'status'    =>  'required'
         ]);
 
         if($validator->fails()) {
@@ -41,7 +44,7 @@ class CategoryController extends Controller
             'data'      =>  $category
         ]);
     }
-
+    /* FUNCTION FOR SHOW CATEGORY */
     public function show($id) {
         $category   =   Category::find($id);
 
@@ -58,7 +61,7 @@ class CategoryController extends Controller
             'data'  =>  $category
         ],200);
     }
-
+/* FUNCTION FOR UPDATE CATEGORY */
     public function update(Request $request, $id) {
         $category   =   Category::find($id);
 
@@ -91,7 +94,7 @@ class CategoryController extends Controller
             'data'      =>  $category
         ]);
     }
-
+/* FUNCTION FOR DESTROY / DELETE CATEGORY */
     public function destroy($id) {
         $category   =   Category::find($id);
 
@@ -102,7 +105,7 @@ class CategoryController extends Controller
                 'data'  =>  []
             ],404);
         }
-        
+
         $category->delete();
 
         return response()->json([
