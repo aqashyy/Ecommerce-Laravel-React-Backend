@@ -12,6 +12,6 @@ class TempImage extends Model
         if($this->name == ''){
             return "";
         }
-        return asset('/uploads/temp/thumb'.$this->name);
+        return asset('/uploads/temp/thumb/'.$this->name);
     }
 }

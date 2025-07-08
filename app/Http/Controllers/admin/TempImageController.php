@@ -50,4 +50,30 @@ class TempImageController extends Controller
         ],200);
 
     }
+
+    // Function to delete temp image with id
+    public function destroy($id){
+        $tempImage  =   TempImage::find($id);
+
+        // check image is available
+        if($tempImage === null) {
+            return response()->json([
+                'status'    =>  404,
+                'message'   =>  'Image not found',
+                'data'  =>  []
+            ],404);
+        }
+        // delete image from path
+        unlink(public_path('uploads/temp/'.$tempImage->name));
+        unlink(public_path('uploads/temp/thumb/'.$tempImage->name));
+        //  Delete from database
+        $tempImage->delete();
+
+        return response()->json([
+            'status'    =>  200,
+            'message'   =>  'Brand deleted successfully',
+        ]);
+
+
+    }
 }
