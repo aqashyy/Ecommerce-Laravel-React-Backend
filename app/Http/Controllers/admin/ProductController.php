@@ -61,25 +61,25 @@ class ProductController extends Controller
 
         // Save product images
 
-        if(!empty($request->gallery)) {
-            foreach($request->gallery as $key =>  $tempImageId) {
+        if (!empty($request->gallery)) {
+            foreach ($request->gallery as $key =>  $tempImageId) {
                 $tempImage  =   TempImage::find($tempImageId);
 
                 // Large thumbnail
-                $extArray   =   explode('.',$tempImage->name);
+                $extArray   =   explode('.', $tempImage->name);
                 $ext        =   end($extArray);
 
-                $imageName  =   $product->id.'-'. time() .'.'.$ext;
+                $imageName  =   $product->id . '-' . time() . '.' . $ext;
                 $manager = new ImageManager(Driver::class);
-                $img        =   $manager->read(public_path('uploads/temp/'.$tempImage->name));
+                $img        =   $manager->read(public_path('uploads/temp/' . $tempImage->name));
                 $img->scaleDown(1200);
-                $img->save(public_path('uploads/products/large/'.$imageName));
+                $img->save(public_path('uploads/products/large/' . $imageName));
 
                 // Small Thumbnail
                 $manager = new ImageManager(Driver::class);
-                $img        =   $manager->read(public_path('uploads/temp/'.$tempImage->name));
-                $img->coverDown(400,460);
-                $img->save(public_path('uploads/products/small/'.$imageName));
+                $img        =   $manager->read(public_path('uploads/temp/' . $tempImage->name));
+                $img->coverDown(400, 460);
+                $img->save(public_path('uploads/products/small/' . $imageName));
 
                 // Save product image
                 $productImage               =   new ProductImage();
@@ -87,7 +87,7 @@ class ProductController extends Controller
                 $productImage->product_id   =   $product->id;
                 $productImage->save();
 
-                if($key == 0) {
+                if ($key == 0) {
                     $product->image     =   $imageName;
                     $product->save();
                 }
@@ -100,7 +100,8 @@ class ProductController extends Controller
         ], 200);
     }
     // This function for return signle product
-    public function show($id) {
+    public function show($id)
+    {
         $product    =   Product::with('product_images')->find($id);
 
         if ($product == null) {
@@ -168,7 +169,8 @@ class ProductController extends Controller
         ], 200);
     }
     // This function for delete signle product
-    public function destroy($id) {
+    public function destroy($id)
+    {
         $product    =   Product::find($id);
 
         if ($product == null) {
@@ -183,6 +185,57 @@ class ProductController extends Controller
         return response()->json([
             'status'    => 200,
             'message'   =>  'Product has been deleted successfully'
+        ], 200);
+    }
+    public function saveProductImage(Request $request)
+    {
+        // validation request
+        $validator = Validator::make($request->all(), [
+            'image' =>  'required|image|mimes:jpg,jpeg,png,gif'
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'    =>  400,
+                'errors'    =>  $validator->errors()
+            ], 400);
+        }
+
+        $image = $request->file('image');
+        $imageName  =   $request->product_id . '-' . time() . '.' . $image->extension();
+
+        // Large thumbnail
+        $manager = new ImageManager(Driver::class);
+        $img        =   $manager->read($image->getPathname());
+        $img->scaleDown(1200);
+        $img->save(public_path('uploads/products/large/' . $imageName));
+
+        // Small Thumbnail
+        $manager = new ImageManager(Driver::class);
+        $img        =   $manager->read($image->getPathname());
+        $img->coverDown(400, 460);
+        $img->save(public_path('uploads/products/small/' . $imageName));
+
+        // Insert a record in product_images table
+        $productImage = new ProductImage();
+        $productImage->image         = $imageName;
+        $productImage->product_id   = $request->product_id;
+        $productImage->save();
+
+        return response()->json([
+            'status'    =>  200,
+            'message'   =>  'Image has been uploaded successfully',
+            'data'      =>  $productImage
+        ], 200);
+    }
+    public function setDefaultProductImage(Request $request) {
+        $product = Product::find($request->product_id);
+        $product->image = $request->image;
+        $product->save();
+
+        return response()->json([
+            'status'    =>  200,
+            'message'   =>  'Product default image has been updated successfully',
         ], 200);
     }
 }
