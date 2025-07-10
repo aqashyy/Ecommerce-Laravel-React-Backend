@@ -71,7 +71,7 @@ class TempImageController extends Controller
 
         return response()->json([
             'status'    =>  200,
-            'message'   =>  'Brand deleted successfully',
+            'message'   =>  'Image deleted successfully',
         ]);
 
 

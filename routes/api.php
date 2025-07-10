@@ -4,6 +4,7 @@ use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\TempImageController;
 use Illuminate\Http\Request;
@@ -26,4 +27,5 @@ Route::group(['middleware' => 'auth:sanctum'], function() {
     Route::delete('temp-image/{id}',[TempImageController::class,'destroy']);
     Route::post('save-product-image',[ProductController::class,'saveProductImage']);
     Route::get('set-default-product-image',[ProductController::class,'setDefaultProductImage']);
+    Route::delete('product-image/{id}',[ProductImageController::class,'destroy']);
 });
