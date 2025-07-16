@@ -20,8 +20,8 @@ class ProductImageController extends Controller
         }
 
         // delete image from path
-        unlink(public_path('uploads/products/large/'.$productImg->name));
-        unlink(public_path('uploads/products/small/'.$productImg->name));
+        unlink(public_path('uploads/products/large/'.$productImg->image));
+        unlink(public_path('uploads/products/small/'.$productImg->image));
         //  Delete from database
         $productImg->delete();
 
