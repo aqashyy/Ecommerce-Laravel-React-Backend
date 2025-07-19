@@ -193,7 +193,7 @@ class ProductController extends Controller
     // This function for delete signle product
     public function destroy($id)
     {
-        $product    =   Product::find($id);
+        $product    =   Product::with(['product_images','product_sizes'])->find($id);
 
         if ($product == null) {
             return response()->json([
@@ -202,6 +202,16 @@ class ProductController extends Controller
             ], 404);
         }
 
+        // delete product images also
+        if($product->product_images) {
+            foreach($product->product_images as $pImage) {
+                @unlink(public_path('uploads/products/large/'.$pImage->image));
+                @unlink(public_path('uploads/products/small/'.$pImage->image));
+            }
+        }
+        // currently cascade deletion not working, mannually deleting...
+        $product->product_images()->delete();
+        $product->product_sizes()->delete();
         $product->delete();
 
         return response()->json([
