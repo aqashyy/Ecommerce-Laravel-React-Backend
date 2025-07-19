@@ -94,6 +94,15 @@ class ProductController extends Controller
                 }
             }
         }
+        // if sizes not empty
+        if(!empty($request->sizes)) {
+            foreach($request->sizes as $sizeId) {
+                $productSize = new ProductSize();
+                $productSize->size_id   =   $sizeId;
+                $productSize->product_id = $product->id;
+                $productSize->save();
+            }
+        }
 
         return response()->json([
             'status'    => 200,
