@@ -70,7 +70,7 @@ class ProductController extends Controller
                 $extArray   =   explode('.', $tempImage->name);
                 $ext        =   end($extArray);
 
-                $imageName  =   $product->id . '-' . time() . '.' . $ext;
+                $imageName  =   $product->id . '-' . rand(1000,10000) . time() . '.' . $ext;
                 $manager = new ImageManager(Driver::class);
                 $img        =   $manager->read(public_path('uploads/temp/' . $tempImage->name));
                 $img->scaleDown(1200);
