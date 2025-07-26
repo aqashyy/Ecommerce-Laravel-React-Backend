@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\TempImageController;
 use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\OrderController;
+use App\Http\Controllers\admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Front\ProductController as FrontProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -42,4 +43,7 @@ Route::group(['middleware' => ['auth:sanctum','checkAdminRole']], function() {
     Route::post('save-product-image',[ProductController::class,'saveProductImage']);
     Route::get('set-default-product-image',[ProductController::class,'setDefaultProductImage']);
     Route::delete('product-image/{id}',[ProductImageController::class,'destroy']);
+
+    Route::get('orders',[AdminOrderController::class,'index']);
+    Route::get('orders/{id}',[AdminOrderController::class,'details']);
 });
