@@ -37,17 +37,36 @@ class OrderController extends Controller
             $orderItem = new OrderItem();
             $orderItem->product_id  =   $item['product_id'];
             $orderItem->order_id    =   $order->id;
-            $orderItem->name        =   $item['name'];
+            $orderItem->name        =   $item['title'];
             $orderItem->size        =   $item['size'];
-            $orderItem->price       =   $item['price'];
-            $orderItem->unit_price  =   $item['unit_price'];
+            $orderItem->price       =   $item['qty'] * $item['price'];
+            $orderItem->unit_price  =   $item['price'];
             $orderItem->qty         =   $item['qty'];
             $orderItem->save();
         }
 
         return response()->json([
             'status'    =>  200,
+            'id'        =>  $order->id,
             'message'   =>  "Your order placed successfully"
         ],200);
+    }
+
+    public function orderDetails(Request $request, $id) {
+        $order = Order::where('user_id', $request->user()->id)
+                    ->where('id', $id)
+                    ->with('order_items')
+                    ->first();
+        if($order == null) {
+            return response()->json([
+                'status' => 404,
+                'message'   =>  'Product Not Found!'
+            ],404);
+        } else {
+            return response()->json([
+                'status'    => 200,
+                'data'  =>  $order
+            ],200);
+        }
     }
 }
