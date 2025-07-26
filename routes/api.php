@@ -28,6 +28,9 @@ Route::post('login',[AccountController::class,'authenticate']);
 Route::group(['middleware' => ['auth:sanctum','checkUserRole']], function() {
     Route::post('save-order',[OrderController::class,'saveOrder']);
     Route::get('get-order-details/{id}',[OrderController::class,'orderDetails']);
+    Route::get('my-orders',[AccountController::class,'myOrders']);
+    Route::post('update-profile',[AccountController::class,'updateProfile']);
+    Route::get('get-profile',[AccountController::class,'getProfile']);
 });
 
 

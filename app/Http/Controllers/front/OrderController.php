@@ -55,7 +55,7 @@ class OrderController extends Controller
     public function orderDetails(Request $request, $id) {
         $order = Order::where('user_id', $request->user()->id)
                     ->where('id', $id)
-                    ->with('order_items')
+                    ->with('order_items','order_items.product')
                     ->first();
         if($order == null) {
             return response()->json([
