@@ -46,4 +46,5 @@ Route::group(['middleware' => ['auth:sanctum','checkAdminRole']], function() {
 
     Route::get('orders',[AdminOrderController::class,'index']);
     Route::get('orders/{id}',[AdminOrderController::class,'details']);
+    Route::post('orders/{id}',[AdminOrderController::class,'updateOrder']);
 });
