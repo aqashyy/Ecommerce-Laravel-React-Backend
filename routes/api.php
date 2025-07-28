@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
 use App\Http\Controllers\Admin\SizeController;
 use App\Http\Controllers\Admin\TempImageController;
+use App\Http\Controllers\Admin\ShippingController;
+use App\Http\Controllers\Front\ShippingController as FrontShippingController;
 use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\admin\OrderController as AdminOrderController;
@@ -24,6 +26,7 @@ Route::get('get-products',[FrontProductController::class,'getProducts']);
 Route::get('get-product/{id}',[FrontProductController::class,'getProduct']);
 Route::post('register',[AccountController::class,'register']);
 Route::post('login',[AccountController::class,'authenticate']);
+Route::get('get-shipping-front',[FrontShippingController::class,'getShipping']);
 
 Route::group(['middleware' => ['auth:sanctum','checkUserRole']], function() {
     Route::post('save-order',[OrderController::class,'saveOrder']);
@@ -50,4 +53,7 @@ Route::group(['middleware' => ['auth:sanctum','checkAdminRole']], function() {
     Route::get('orders',[AdminOrderController::class,'index']);
     Route::get('orders/{id}',[AdminOrderController::class,'details']);
     Route::post('orders/{id}',[AdminOrderController::class,'updateOrder']);
+
+    Route::get('get-shipping',[ShippingController::class,'getShipping']);
+    Route::post('save-shipping',[ShippingController::class,'updateShipping']);
 });
