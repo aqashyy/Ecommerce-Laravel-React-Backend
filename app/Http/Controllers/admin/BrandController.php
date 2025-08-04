@@ -2,49 +2,41 @@
 
 namespace App\Http\Controllers\admin;
 
+use App\DTO\BrandDTO;
 use App\Http\Controllers\Controller;
-use App\Models\Brand;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Brand\StoreRequest;
+use App\Http\Requests\Brand\UpdateRequest;
+use App\Services\BrandService;
+use Illuminate\Http\JsonResponse;
 
 class BrandController extends Controller
 {
-    public function index() {
+    public function __construct(protected BrandService $brandService) {}
+    public function index(): JsonResponse {
 
-        $brands =   Brand::orderBy('created_at','DESC')->get();
         return response()->json([
             'status' => 200,
-            'data'  =>  $brands
+            'data'  =>  $this->brandService->list()
         ],200);
+
     }
-    public function store(Request $request) {
-        $validator  =   Validator::make($request->all(), [
-            'name'  =>  'required'
-        ]);
+    public function store(StoreRequest $request): JsonResponse {
 
-        if($validator->fails()) {
-            return response()->json([
-                'status'    =>  400,
-                'errors'    =>  $validator->errors()
-            ],400);
-        }
+        $dto    =   BrandDTO::fromArray($request->validated());
 
-        $barand   =   new Brand;
-        $barand->name     =   $request->name;
-        $barand->status   =   $request->status;
-        $barand->save();
+        $brand  =   $this->brandService->create($dto);
 
         return response()->json([
             'status'    =>  200,
             'message'   =>  'Brand created successfully',
-            'data'      =>  $barand
+            'data'      =>  $brand
         ]);
     }
 
-    public function show($id) {
-        $barand   =   Brand::find($id);
+    public function show(string $id): JsonResponse {
+        $brand   = $this->brandService->find($id);
 
-        if($barand === null) {
+        if(!$brand) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Brand not found',
@@ -54,55 +46,38 @@ class BrandController extends Controller
 
         return response()->json([
             'status'    =>  200,
-            'data'  =>  $barand
+            'data'  =>  $brand
         ],200);
     }
 
-    public function update(Request $request, $id) {
-        $barand   =   Brand::find($id);
+    public function update(UpdateRequest $request, string $id): JsonResponse {
+        $dto    =   BrandDTO::fromArray($request->validated());
+        $brand  =   $this->brandService->update($id,$dto);
 
-        if($barand === null) {
+        if(!$brand) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Brand not found',
                 'data'  =>  []
             ],404);
         }
-
-        $validator  =   Validator::make($request->all(), [
-            'name'  =>  'required'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                'status'    =>  400,
-                'errors'    =>  $validator->errors()
-            ],400);
-        }
-
-        $barand->name     =   $request->name;
-        $barand->status   =   $request->status;
-        $barand->save();
 
         return response()->json([
             'status'    =>  200,
             'message'   =>  'Brand updated successfully',
-            'data'      =>  $barand
+            'data'      =>  $brand
         ]);
     }
 
-    public function destroy($id) {
-        $barand   =   Brand::find($id);
+    public function destroy(string $id): JsonResponse {
 
-        if($barand === null) {
+        if(!$this->brandService->delete($id)) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Brand not found',
                 'data'  =>  []
             ],404);
         }
-
-        $barand->delete();
 
         return response()->json([
             'status'    =>  200,

@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Interfaces\BrandInterface;
+use App\Repositories\BrandRepository;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(BrandInterface::class, BrandRepository::class);
     }
 
     /**
