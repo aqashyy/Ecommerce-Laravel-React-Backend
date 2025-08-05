@@ -2,53 +2,42 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\DTO\CategoryDTO;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Category\StoreRequest;
+use App\Http\Requests\Category\UpdateRequest;
+use App\Services\CategoryService;
+use Illuminate\Http\JsonResponse;
 
 class CategoryController extends Controller
 {
-    //
-    public function index() {
+    public function __construct(protected CategoryService $categoryService) {
 
-        $categories =   Category::orderBy('created_at','DESC')->get();
+    }
+    //
+    public function index(): JsonResponse {
+
         return response()->json([
             'status' => 200,
-            'data'  =>  $categories
+            'data'  =>  $this->categoryService->list()
         ],200);
     }
     /*  Function for store categories */
-    public function store(Request $request) {
-        $validator  =   Validator::make($request->all(), [
-            'name'      =>  'required',
-            'status'    =>  'required'
-        ]);
+    public function store(StoreRequest $request): JsonResponse {
 
-        if($validator->fails()) {
-            return response()->json([
-                'status'    =>  400,
-                'errors'    =>  $validator->errors()
-            ],400);
-        }
-
-        $category   =   new Category;
-        $category->name     =   $request->name;
-        $category->status   =   $request->status;
-        $category->save();
+        $categoryDTO    =   CategoryDTO::fromArray($request->validated());
 
         return response()->json([
             'status'    =>  200,
             'message'   =>  'Category created successfully',
-            'data'      =>  $category
+            'data'      =>  $this->categoryService->create($categoryDTO)
         ]);
     }
     /* FUNCTION FOR SHOW CATEGORY */
-    public function show($id) {
-        $category   =   Category::find($id);
+    public function show(int $id): JsonResponse {
+        $category   =   $this->categoryService->find($id);
 
-        if($category === null) {
+        if(!$category) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Category not found',
@@ -62,31 +51,18 @@ class CategoryController extends Controller
         ],200);
     }
 /* FUNCTION FOR UPDATE CATEGORY */
-    public function update(Request $request, $id) {
-        $category   =   Category::find($id);
+    public function update(UpdateRequest $request,int $id): JsonResponse {
+        $categoryDTO    =   CategoryDTO::fromArray($request->validated());
 
-        if($category === null) {
+        $category   =   $this->categoryService->update($id,$categoryDTO);
+
+        if(!$category) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Category not found',
                 'data'  =>  []
             ],404);
         }
-
-        $validator  =   Validator::make($request->all(), [
-            'name'  =>  'required'
-        ]);
-
-        if($validator->fails()) {
-            return response()->json([
-                'status'    =>  400,
-                'errors'    =>  $validator->errors()
-            ],400);
-        }
-
-        $category->name     =   $request->name;
-        $category->status   =   $request->status;
-        $category->save();
 
         return response()->json([
             'status'    =>  200,
@@ -95,18 +71,15 @@ class CategoryController extends Controller
         ]);
     }
 /* FUNCTION FOR DESTROY / DELETE CATEGORY */
-    public function destroy($id) {
-        $category   =   Category::find($id);
+    public function destroy(int $id): JsonResponse {
 
-        if($category === null) {
+        if(!$this->categoryService->delete($id)) {
             return response()->json([
                 'status'    =>  404,
                 'message'   =>  'Category not found',
                 'data'  =>  []
             ],404);
         }
-
-        $category->delete();
 
         return response()->json([
             'status'    =>  200,
