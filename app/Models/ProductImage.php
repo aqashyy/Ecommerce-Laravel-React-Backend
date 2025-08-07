@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductImage extends Model
 {
+    protected $fillable = ['product_id', 'image'];
     protected $appends = ['image_url','is_default_img'];
     public function getImageUrlAttribute() {
         if($this->image == ''){
