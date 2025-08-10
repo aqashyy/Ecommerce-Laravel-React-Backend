@@ -2,17 +2,17 @@
 
 use App\Http\Controllers\admin\AuthController;
 use App\Http\Controllers\admin\BrandController;
-use App\Http\Controllers\Admin\CategoryController;
-use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\admin\CategoryController;
+use App\Http\Controllers\admin\ProductController;
 use App\Http\Controllers\admin\ProductImageController;
-use App\Http\Controllers\Admin\SizeController;
-use App\Http\Controllers\Admin\TempImageController;
-use App\Http\Controllers\Admin\ShippingController;
-use App\Http\Controllers\Front\ShippingController as FrontShippingController;
+use App\Http\Controllers\admin\SizeController;
+use App\Http\Controllers\admin\TempImageController;
+use App\Http\Controllers\admin\ShippingController;
+use App\Http\Controllers\front\ShippingController as FrontShippingController;
 use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\admin\OrderController as AdminOrderController;
-use App\Http\Controllers\Front\ProductController as FrontProductController;
+use App\Http\Controllers\front\ProductController as FrontProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
