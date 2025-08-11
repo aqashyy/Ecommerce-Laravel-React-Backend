@@ -8,12 +8,12 @@ readonly class OrderItemDTO
      * Create a new class instance.
      */
     public function __construct(
-        public int $productId,
-        public int $orderId,
+        public int $product_id,
+        public int $order_id,
         public string $name,
         public string $size,
         public float $price,
-        public float $unitPrice,
+        public float $unit_price,
         public int $qty
     )
     {
@@ -23,12 +23,12 @@ readonly class OrderItemDTO
     public static function fromArray($data): self
     {
         return new self(
-            productId: $data['product_id'],
-            orderId: $data['order_id'],
+            product_id: $data['product_id'],
+            order_id: $data['order_id'],
             name: $data['name'],
             size: $data['size'],
             price: $data['price'],
-            unitPrice: $data['unit_price'],
+            unit_price: $data['unit_price'],
             qty: $data['qty']
         );
     }

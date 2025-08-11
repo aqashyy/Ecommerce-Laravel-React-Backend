@@ -11,7 +11,7 @@ readonly class OrderDTO
      * Create a new class instance.
      */
     public function __construct(
-        public int $userId,
+        public int $user_id,
         public string $name,
         public string $address,
         public string $email,
@@ -19,11 +19,11 @@ readonly class OrderDTO
         public string $city,
         public string $state,
         public string $zip,
-        public string $grandTotal,
+        public string $grand_total,
         public string $subtotal,
         public string $shipping,
         public ?string $discount,
-        public PaymentStatus $paymentStatus,
+        public PaymentStatus $payment_status,
         public OrderStatus $status,
     )
     {
@@ -32,7 +32,7 @@ readonly class OrderDTO
     public static function fromArray($data): self
     {
         return new self(
-            userId: $data['user_id'],
+            user_id: $data['user_id'],
             name: $data['name'],
             address: $data['address'],
             email: $data['email'],
@@ -40,12 +40,12 @@ readonly class OrderDTO
             city: $data['city'],
             state: $data['state'],
             zip: $data['zip'],
-            grandTotal: $data['grand_total'],
+            grand_total: $data['grand_total'],
             subtotal: $data['subtotal'],
             shipping: $data['shipping'],
             discount: $data['discount'] ?? null,
-            paymentStatus: $data['payment_status'],
-            status: $data['status']
+            payment_status: PaymentStatus::from($data['payment_status']),
+            status: OrderStatus::from($data['status'])
 
         );
     }

@@ -15,8 +15,16 @@ class OrderRepository implements OrderInterface
     }
     public function findById(int $id): Order|null
     {
-        return Order::find($id);
+        return Order::with('order_items','order_items.product')->find($id);
     }
+
+    public function findByUser(int $id): ?Collection
+    {
+        return Order::where('user_id', $id)
+                ->with('order_items','order_items.product')
+                ->get();
+    }
+
     public function create(OrderDTO $orderDTO): Order
     {
         return Order::create($orderDTO->toArray());

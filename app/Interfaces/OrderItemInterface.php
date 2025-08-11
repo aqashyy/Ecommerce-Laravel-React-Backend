@@ -10,6 +10,6 @@ use PhpParser\Node\Expr\FuncCall;
 interface OrderItemInterface
 {
     public function all(): Collection;
-    public function findByOrderId(int $id): ?OrderItem;
+    public function findByOrderId(int $id): ?Collection;
     public function create(OrderItemDTO $orderItemDTO): OrderItem;
 }

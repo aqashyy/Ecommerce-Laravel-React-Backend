@@ -2,48 +2,27 @@
 
 namespace App\Http\Controllers\front;
 
+use App\DTO\OrderDTO;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Services\OrderService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-    public function saveOrder(Request $request) {
+    public function __construct(
+        protected OrderService $orderService
+    ) {}
+    public function saveOrder(Request $request): JsonResponse {
 
         // save order
-        $order = new Order();
+        $order = $this->orderService->create(OrderDTO::fromArray([
+            ... $request->all(),
+            'user_id' => $request->user()->id
+        ]), $request->cart);
 
-        $order->user_id         = $request->user()->id;
-        $order->name            =   $request->name;
-        $order->address         =   $request->address;
-        $order->email           =   $request->email;
-        $order->mobile          =   $request->mobile;
-        $order->city            =   $request->city;
-        $order->state           =   $request->state;
-        $order->zip             =   $request->zip;
-        $order->grand_total     =   $request->grand_total;
-        $order->subtotal        =   $request->subtotal;
-        $order->shipping        =   $request->shipping;
-        $order->discount        =   $request->discount;
-        $order->payment_status  =   $request->payment_status;
-        $order->status          =   $request->status;
-        $order->save();
-
-        // save order Item
-
-        foreach($request->cart as $item) {
-
-            $orderItem = new OrderItem();
-            $orderItem->product_id  =   $item['product_id'];
-            $orderItem->order_id    =   $order->id;
-            $orderItem->name        =   $item['title'];
-            $orderItem->size        =   $item['size'];
-            $orderItem->price       =   $item['qty'] * $item['price'];
-            $orderItem->unit_price  =   $item['price'];
-            $orderItem->qty         =   $item['qty'];
-            $orderItem->save();
-        }
 
         return response()->json([
             'status'    =>  200,
@@ -52,15 +31,14 @@ class OrderController extends Controller
         ],200);
     }
 
-    public function orderDetails(Request $request, $id) {
-        $order = Order::where('user_id', $request->user()->id)
-                    ->where('id', $id)
-                    ->with('order_items','order_items.product')
-                    ->first();
+    public function orderDetails(Request $request, $id): JsonResponse {
+
+        $order = $this->orderService->getOrderDetails($request->user()->id, $id);
+
         if($order == null) {
             return response()->json([
                 'status' => 404,
-                'message'   =>  'Product Not Found!'
+                'message'   =>  'Order Not Found!'
             ],404);
         } else {
             return response()->json([
