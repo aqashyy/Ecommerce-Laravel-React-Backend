@@ -22,7 +22,7 @@ class ProductRepository implements ProductInterface
      */
     public function find(int $id): ?Product
     {
-        return Product::with(['product_images','product_sizes'])->find($id);
+        return Product::with(['product_images','product_sizes.size'])->find($id);
     }
     /**
      * Create a new product
