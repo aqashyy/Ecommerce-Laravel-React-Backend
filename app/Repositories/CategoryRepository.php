@@ -13,6 +13,12 @@ class CategoryRepository implements CategoryInterface
     {
         return Category::orderBy('created_at','DESC')->get();
     }
+    public function active(): Collection|null
+    {
+        return Category::orderBy('name','DESC')
+                        ->where('status',1)
+                        ->get();
+    }
     public function find(int $id): ?Category
     {
         return Category::find($id);

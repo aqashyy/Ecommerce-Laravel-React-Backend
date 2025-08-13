@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\DTO\ProductDTO;
 use App\Interfaces\ProductInterface;
 use App\Models\Product;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository implements ProductInterface
@@ -14,7 +15,7 @@ class ProductRepository implements ProductInterface
      */
     public function all(): Collection
     {
-        return Product::orderBy('created_at', 'DESC')->get();
+        return Product::with(['product_images','product_sizes'])->orderBy('created_at', 'DESC')->get();
     }
     /**
      * Find a product by its ID
@@ -70,5 +71,21 @@ class ProductRepository implements ProductInterface
     {
         $product->image = $imageName;
         return $product->save();
+    }
+
+    public function getLatest(int $limit): ?Collection
+    {
+        return Product::orderBy('created_at','DESC')
+                        ->where('status',1)
+                        ->limit($limit)
+                        ->get();
+    }
+    public function getFeatured(int $limit): ?Collection
+    {
+        return Product::orderBy('created_at','DESC')
+                        ->where('status',1)
+                        ->where('is_featured','yes')
+                        ->limit($limit)
+                        ->get();
     }
 }

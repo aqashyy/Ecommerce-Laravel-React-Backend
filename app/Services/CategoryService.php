@@ -29,6 +29,11 @@ class CategoryService
     {
         return $this->categoryInterface->find($id);
     }
+
+    public function getActive(): Collection|null
+    {
+        return $this->categoryInterface->active();
+    }
     /**
      * Summary of create
      * @param \App\DTO\CategoryDTO $categoryDTO

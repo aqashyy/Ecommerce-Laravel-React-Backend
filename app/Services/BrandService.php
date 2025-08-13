@@ -26,6 +26,10 @@ class BrandService
     {
         return $this->brandInterface->find($id);
     }
+    public function getActive(): Collection|null
+    {
+        return $this->brandInterface->active();
+    }
     public function create(BrandDTO $dto): Brand
     {
         return $this->brandInterface->create($dto);

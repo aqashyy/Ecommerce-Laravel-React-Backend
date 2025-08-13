@@ -33,4 +33,7 @@ interface ProductInterface
      */
     public function setDefaultImage(Product $product, string $imageName): bool;
 
+    public function getLatest(int $limit): ?Collection;
+    public function getFeatured(int $limit): ?Collection;
+
 }

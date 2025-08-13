@@ -50,6 +50,36 @@ class ProductService
     {
         return $this->productInterface->find($id);
     }
+
+    public function getLatestProduct(): ?Collection
+    {
+        return $this->productInterface->getLatest(8);
+    }
+    public function getFeaturedProduct(): ?Collection
+    {
+        return $this->productInterface->getFeatured(8);
+    }
+
+    public function filterProduts($request): Collection
+    {
+        $products = Product::orderBy('created_at','DESC')->where('status', 1);
+
+        // if category
+        if(!empty($request->category)) {
+            $catArr = explode(',',$request->category);
+            $products = $products->whereIn('category_id',$catArr);
+        }
+        // if brand
+        if(!empty($request->brand)) {
+            $brandArr = explode(',',$request->brand);
+            $products = $products->whereIn('brand_id',$brandArr);
+        }
+
+        $products = $products->get();
+
+        return $products;
+
+    }
     /**
      *
      * Create a new product
@@ -210,7 +240,7 @@ class ProductService
     }
 
     /**
-     * 
+     *
      * Delete tempimage by id
      *
      */

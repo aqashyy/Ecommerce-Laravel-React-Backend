@@ -28,4 +28,6 @@ interface CategoryInterface
      * delete record
      */
     public function delete(Category $category): void;
+
+    public function active(): ?Collection;
 }

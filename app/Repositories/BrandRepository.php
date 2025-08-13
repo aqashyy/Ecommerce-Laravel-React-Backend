@@ -16,6 +16,12 @@ class BrandRepository implements BrandInterface
     {
         return Brand::orderBy('created_at','DESC')->get();
     }
+    public function active(): Collection|null
+    {
+        return Brand::orderBy('name','DESC')
+                        ->where('status',1)
+                        ->get();
+    }
     public function find(string $id): ?Brand
     {
         return Brand::find($id);

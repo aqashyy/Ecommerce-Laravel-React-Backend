@@ -29,4 +29,6 @@ interface BrandInterface
      * delete record
      */
     public function delete(Brand $brand): void;
+
+    public function active(): ?Collection;
 }
