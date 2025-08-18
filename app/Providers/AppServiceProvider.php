@@ -7,6 +7,7 @@ use App\Interfaces\BrandInterface;
 use App\Interfaces\CategoryInterface;
 use App\Interfaces\OrderInterface;
 use App\Interfaces\OrderItemInterface;
+use App\Interfaces\PaymentInterface;
 use App\Interfaces\ProductImageInterface;
 use App\Interfaces\ProductInterface;
 use App\Interfaces\ProductSizeInterface;
@@ -16,6 +17,7 @@ use App\Repositories\BrandRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\OrderItemRepository;
 use App\Repositories\OrderRepository;
+use App\Repositories\PaymentRepository;
 use App\Repositories\ProductImageRepository;
 use App\Repositories\ProductRepository;
 use App\Repositories\ProductSizeRepository;
@@ -39,6 +41,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(UserInterface::class, UserRepository::class);
         $this->app->bind(OrderInterface::class, OrderRepository::class);
         $this->app->bind(OrderItemInterface::class, OrderItemRepository::class);
+        $this->app->bind(PaymentInterface::class, PaymentRepository::class);
     }
 
     /**

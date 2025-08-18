@@ -11,7 +11,7 @@ readonly class PaymentDTO
         public string $order_id,
         public int $amount,
         public string $currency = 'INR',
-        public string $reciept,
+        public string $receipt,
         public string $status = 'created'
     )
     {
@@ -24,7 +24,7 @@ readonly class PaymentDTO
             order_id: $data['order_id'],
             amount: $data['amount'],
             currency: $data['currency'],
-            reciept: $data['reciept'],
+            receipt: $data['receipt'],
             status: $data['status'] ?? 'created'
         );
     }

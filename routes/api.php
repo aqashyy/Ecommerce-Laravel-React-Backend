@@ -13,11 +13,13 @@ use App\Http\Controllers\front\AccountController;
 use App\Http\Controllers\front\OrderController;
 use App\Http\Controllers\admin\OrderController as AdminOrderController;
 use App\Http\Controllers\front\ProductController as FrontProductController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
-Route::post('admin/login',[AuthController::class,'authenticate']);
 
+// frontend public routes
+
+Route::post('admin/login',[AuthController::class,'authenticate']);
 Route::get('get-latest-products',[FrontProductController::class,'latestProducts']);
 Route::get('get-featured-products',[FrontProductController::class,'featuredProducts']);
 Route::get('get-categories',[FrontProductController::class,'getCategories']);
@@ -28,15 +30,19 @@ Route::post('register',[AccountController::class,'register']);
 Route::post('login',[AccountController::class,'authenticate']);
 Route::get('get-shipping-front',[FrontShippingController::class,'getShipping']);
 
+// user front auth routes
 Route::group(['middleware' => ['auth:sanctum','checkUserRole']], function() {
     Route::post('save-order',[OrderController::class,'saveOrder']);
     Route::get('get-order-details/{id}',[OrderController::class,'orderDetails']);
     Route::get('my-orders',[AccountController::class,'myOrders']);
     Route::post('update-profile',[AccountController::class,'updateProfile']);
     Route::get('get-profile',[AccountController::class,'getProfile']);
+
+    // payment routes
+    Route::post('payments/order', [PaymentController::class,'createOrder']);
+    Route::post('payments/verify', [PaymentController::class, 'verifyPayment']);
 });
-
-
+// admin auth routes
 Route::group(['middleware' => ['auth:sanctum','checkAdminRole']], function() {
 
     Route::resource('categories',CategoryController::class);

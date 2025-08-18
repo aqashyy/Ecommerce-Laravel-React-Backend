@@ -20,7 +20,7 @@ class PaymentRepository implements PaymentInterface
     public function createOrder(PaymentDTO $paymentDTO): array
     {
         $order = $this->razorpay->order->create([
-            'reciept'   =>  $paymentDTO->reciept,
+            'receipt'   =>  $paymentDTO->receipt,
             'amount'    =>  $paymentDTO->amount, //in paise
             'currency'  =>  $paymentDTO->currency,
         ]);
